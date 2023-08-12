@@ -50,9 +50,6 @@ function getUserInput(e) {
 async function validateInput() {
     const valid = await isValid();
     if (valid) {
-        // for (let i = currentLine * ANSWER_LENGTH; i < (currentLine + 1) * ANSWER_LENGTH; i++) {
-        //     letterContainers[i].classList.remove("wrong-word");
-        // }
         showAnswer();
         currentLine++;
         if (expectedAnswer.join('') === currentLetters.join('')) {

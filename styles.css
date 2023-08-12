@@ -68,35 +68,35 @@ h1 {
     margin-inline: auto;
 }
 
+.right-place, .wrong-place, .wrong {
+    color: white;
+}
+
 .right-place {
     background: darkgreen;
-    color: white;
 }
 
 .wrong-place {
     background: darkgoldenrod;
-    color: white;
-
 }
 
 .wrong {
     background: grey;
-    color: white;
 }
 
 .wrong-word {
-    animation: flash 2s;
+    animation: flash 1s;
+    animation-fill-mode: both;
 }
 
 @keyframes flash {
-    5% {
-        border-color: crimson;
-    }
-
-    100% {
+    0%, 100% {
         border-color: black;
     }
 
+    50% {
+        border-color: crimson;
+    }
 }
 
 /*Spinner*/
@@ -211,7 +211,6 @@ h1 {
 }
 
 /* winner animation */
-
 @keyframes rainbow {
     100%,
     0% {
