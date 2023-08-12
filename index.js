@@ -1,3 +1,4 @@
+import Swal from 'sweetalert2';
 const letterContainers = document.querySelectorAll('.letter');
 const title = document.querySelector('h1');
 const loader = document.querySelector(".lds-roller");
