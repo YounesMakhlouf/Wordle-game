@@ -23,6 +23,7 @@ body {
     background: #EFEFEF;
     line-height: 1.5;
     color: #333;
+    font-size: var(--step-0);
 }
 
 header {
@@ -49,7 +50,6 @@ main {
     place-content: center;
     text-transform: uppercase;
     font-weight: bold;
-    font-size: var(--step-0);
     aspect-ratio: 1/1;
 }
 
@@ -253,4 +253,15 @@ h1 {
 
 .winner {
     animation: rainbow 4s infinite linear;
+}
+
+.timer {
+    width: 90%;
+    text-align: end;
+    height: 3em;
+}
+
+.timer-number {
+    font-size: var(--step-3);
+    margin-inline: 0.25rem;
 }

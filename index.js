@@ -1,7 +1,9 @@
 import Swal from 'sweetalert2';
+
 const letterContainers = document.querySelectorAll('.letter');
 const title = document.querySelector('h1');
 const loader = document.querySelector(".lds-roller");
+const timer = document.querySelector(".timer");
 
 const ANSWER_LENGTH = 5;
 const ROUNDS = 6;
@@ -10,6 +12,32 @@ let currentLetters = [];
 let currentLine = 0;
 let expectedAnswer = [];
 let done = false;
+let time = 0;
+let seconds = time % 60;
+let minutes = Math.floor(time / 60);
+let level = {
+    "hard": 60, "medium": 300,
+}
+
+function displayTimer() {
+    timer.innerHTML = `<span class="timer-number"> ${minutes.toString()}</span><span>min</span>
+                       <span class="timer-number"> ${seconds.toString()}</span><span>sec</span>`
+}
+
+function decrementTimer() {
+    const timerFunction = setInterval(() => {
+        if (time === 0) {
+            done = true;
+            Swal.fire("Oh no!", ` You lost. The word was "${expectedAnswer.join('')}" `, "error");
+            clearInterval(timerFunction);
+        } else {
+            seconds = time % 60;
+            minutes = Math.floor(time / 60);
+            displayTimer();
+            time--;
+        }
+    }, 1000);
+}
 
 async function getWord() {
     toggleLoader(true);
@@ -37,7 +65,7 @@ function getUserInput(e) {
             currentLetters.pop();
             letterContainers[currentLetters.length + currentLine * ANSWER_LENGTH].innerText = "";
         }
-        if (currentLetters.length === 0 || currentLetters.length !== ANSWER_LENGTH) {
+        if (currentLetters.length !== ANSWER_LENGTH) {
             if (isLetter(e.key)) {
                 currentLetters.push(e.key.toLowerCase());
                 letterContainers[currentLetters.length - 1 + currentLine * ANSWER_LENGTH].innerText = e.key;
@@ -55,11 +83,11 @@ async function validateInput() {
         currentLine++;
         if (expectedAnswer.join('') === currentLetters.join('')) {
             title.classList.add("winner");
+            done = true;
             await Swal.fire("Congratulations", "Word by word, you conquered the board – a true Wordle maestro!", "success");
-            done = true;
         } else if (currentLine === ROUNDS) {
-            await Swal.fire("Oh no!", ` You lost. The word was "${expectedAnswer.join('')}" `, "error");
             done = true;
+            await Swal.fire("Oh no!", ` You lost. The word was "${expectedAnswer.join('')}" `, "error");
         }
         currentLetters = [];
     } else {
@@ -105,9 +133,14 @@ function toggleLoader(loading) {
     loader.classList.toggle("show", loading);
 }
 
-async function init() {
+async function init(difficulty) {
+    console.log(time);
     window.addEventListener("keydown", getUserInput);
     await getWord();
+    if (difficulty !== "easy") {
+        time = level[difficulty];
+        decrementTimer();
+    }
 }
 
 function countLetters(array) {
@@ -123,4 +156,17 @@ function countLetters(array) {
     return obj;
 }
 
-init();
+function showDifficultySelection() {
+    Swal.fire({
+        title: "Choose Difficulty", input: "select", inputOptions: {
+            easy: "Easy", medium: "Medium", hard: "Hard"
+        }, inputPlaceholder: "Select difficulty", confirmButtonText: "Start",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const selectedDifficulty = result.value;
+            init(selectedDifficulty);
+        }
+    });
+}
+
+showDifficultySelection();

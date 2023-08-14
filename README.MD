@@ -7,6 +7,7 @@ This is a Wordle clone. I did it as part of the frontend masters complete intro 
 - [Overview](#overview)
     - [The challenge](#the-challenge)
     - [Screenshots](#screenshots)
+    - [Setting it up](#setting-it-up)
 - [How to play](#how-to-play)
   - [Game rules](#game-rules)
   - [Submitting your guess](#submitting-your-guess)
@@ -31,6 +32,10 @@ Users should be able to:
 ![](./screenshots/game-interface.png)
 ![](./screenshots/correct-guess.png)
 ![](./screenshots/incorrect-guess.png)
+
+### Setting it up
+- Install the necessary dependencies using npm install
+- Run "parcel index.html"
 
 ## How to Play
 
