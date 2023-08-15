@@ -26,7 +26,7 @@ Users should be able to:
 - See the results of their guess and the game's progress.
 - Encounter a "Congratulations" screen when the game is won.
 - Encounter a "You lost" screen when the game is lost.
-- 
+
 ### Screenshots
 
 ![](./screenshots/game-interface.png)
