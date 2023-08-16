@@ -12,14 +12,12 @@ const level = {
 } // Stores the maximum time for each level
 let isLoading = false; // Used to not consider user input while waiting for API requests
 let currentLetters = [];
-let currentLine = 0;
+let currentRow = 0;
 let expectedAnswer = [];
 let done = false; // Used to determine if the game is over or not
 let time = 0; // Used for the timer
-let seconds;
-let minutes;
 
-function displayTimer() {
+function displayTimer(minutes, seconds) {
     timer.innerHTML = `<span class="timer-number"> ${minutes.toString()}</span><span>min</span>
                        <span class="timer-number"> ${seconds.toString()}</span><span>sec</span>`
 }
@@ -28,9 +26,9 @@ function decrementTimer() {
     const timerFunction = setInterval(() => {
         if (time) {
             if (!done) {
-                seconds = time % 60;
-                minutes = Math.floor(time / 60);
-                displayTimer();
+                const seconds = time % 60;
+                const minutes = Math.floor(time / 60);
+                displayTimer(minutes, seconds);
                 time--;
             }
         } else {
@@ -40,7 +38,6 @@ function decrementTimer() {
         }
     }, 1000);
 }
-
 
 async function getWord() {
     toggleLoader(true);
@@ -66,12 +63,12 @@ function getUserInput(e) {
     if (!(done || isLoading)) {
         if (e.key === "Backspace") {
             currentLetters.pop();
-            letters[currentLetters.length + currentLine * ANSWER_LENGTH].innerText = "";
+            letters[currentLetters.length + currentRow * ANSWER_LENGTH].innerText = "";
         }
         if (currentLetters.length !== ANSWER_LENGTH) {
             if (isLetter(e.key)) {
                 currentLetters.push(e.key.toLowerCase());
-                letters[currentLetters.length - 1 + currentLine * ANSWER_LENGTH].innerText = e.key;
+                letters[currentLetters.length - 1 + currentRow * ANSWER_LENGTH].innerText = e.key;
             }
         } else if (e.key === "Enter") {
             validateInput();
@@ -83,12 +80,12 @@ async function validateInput() {
     const valid = await isValid();
     if (valid) {
         colourLetters();
-        currentLine++;
+        currentRow++;
         if (expectedAnswer.join('') === currentLetters.join('')) {
             done = true;
             gameTitle.classList.add("winner");
             await Swal.fire("Congratulations", "Word by word, you conquered the board – a true Wordle maestro!", "success");
-        } else if (currentLine === ROUNDS) {
+        } else if (currentRow === ROUNDS) {
             done = true;
             await Swal.fire("Oh no!", ` You lost. The word was "${expectedAnswer.join('')}" `, "error");
         }
@@ -99,7 +96,7 @@ async function validateInput() {
 }
 
 function markInvalidWord() {
-    for (let i = currentLine * ANSWER_LENGTH; i < (currentLine + 1) * ANSWER_LENGTH; i++) {
+    for (let i = currentRow * ANSWER_LENGTH; i < (currentRow + 1) * ANSWER_LENGTH; i++) {
         letters[i].classList.remove("wrong-word");
         setTimeout(() => {
             letters[i].classList.add("wrong-word");
@@ -111,7 +108,7 @@ function colourLetters() {
     const map = countLetters(expectedAnswer);
     for (let i = 0; i < ANSWER_LENGTH; i++) {
         if (expectedAnswer[i] === currentLetters[i]) {
-            letters[i + currentLine * ANSWER_LENGTH].classList.add("right-place");
+            letters[i + currentRow * ANSWER_LENGTH].classList.add("right-place");
             map[expectedAnswer[i]]--;
         }
     }
@@ -119,10 +116,10 @@ function colourLetters() {
         if (expectedAnswer[i] === currentLetters[i]) {
             // pass
         } else if (expectedAnswer.includes(currentLetters[i]) && map[currentLetters[i]] > 0) {
-            letters[i + currentLine * ANSWER_LENGTH].classList.add("wrong-place");
+            letters[i + currentRow * ANSWER_LENGTH].classList.add("wrong-place");
             map[expectedAnswer[i]]--;
         } else {
-            letters[i + currentLine * ANSWER_LENGTH].classList.add("wrong");
+            letters[i + currentRow * ANSWER_LENGTH].classList.add("wrong");
         }
     }
 }
