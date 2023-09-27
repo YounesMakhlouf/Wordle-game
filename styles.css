@@ -30,6 +30,8 @@ header {
     border-bottom: 2px solid black;
     padding: 1em;
     text-align: center;
+    display: flex;
+    align-items: center;
 }
 
 .word {
@@ -61,6 +63,7 @@ h1 {
     line-height: 1.1;
     font-weight: 700;
     font-size: var(--step-3);
+    margin-inline-start: auto;
 }
 
 .wrapper {
@@ -264,4 +267,19 @@ h1 {
 .timer-number {
     font-size: var(--step-3);
     margin-inline: 0.25rem;
+}
+
+.daily {
+    padding: 1em;
+    background: green;
+    color: white;
+    margin-inline-start: auto;
+    font-size: 1.25rem;
+    border-radius: 4px;
+}
+
+.daily:hover, .daily:focus-within {
+    background: white;
+    color: green;
+    transition: color 0.5s ease-in-out;
 }

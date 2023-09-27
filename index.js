@@ -4,6 +4,7 @@ const letters = document.querySelectorAll('.letter');
 const gameTitle = document.querySelector('h1');
 const loader = document.querySelector(".lds-roller");
 const timer = document.querySelector(".timer");
+const daily = document.querySelector(".daily");
 
 const ANSWER_LENGTH = 5;
 const ROUNDS = 6;
@@ -16,6 +17,7 @@ let currentRow = 0;
 let expectedAnswer = [];
 let done = false; // Used to determine if the game is over or not
 let time = 0; // Used for the timer
+let random = true;
 
 function displayTimer(minutes, seconds) {
     timer.innerHTML = `<span class="timer-number"> ${minutes.toString()}</span><span>min</span>
@@ -40,8 +42,12 @@ function decrementTimer() {
 }
 
 async function getWord() {
+    let url = "https://words.dev-apis.com/word-of-the-day"
+    if (random) {
+        url += "?random=1";
+    }
     toggleLoader(true);
-    const res = await fetch("https://words.dev-apis.com/word-of-the-day");
+    const res = await fetch(url);
     const resObj = await res.json();
     toggleLoader(false);
     expectedAnswer = resObj.word.split('');
@@ -133,9 +139,20 @@ function toggleLoader(loading) {
     loader.classList.toggle("show", loading);
 }
 
-async function init(difficulty) {
+async function init(difficulty, random) {
+    // Initializing variables to be able to replay the game (using daily challenge)
+    for (let i = 0; i < ROUNDS * ANSWER_LENGTH; i++) {
+        letters[i].innerText = "";
+        letters[i].classList.remove("wrong");
+        letters[i].classList.remove("wrong-place");
+        letters[i].classList.remove("right-place");
+    }
+    currentLetters = [];
+    currentRow = 0;
+    done = false;
+
     window.addEventListener("keydown", getUserInput);
-    await getWord();
+    await getWord(random);
     if (difficulty !== "easy") {
         time = level[difficulty];
         decrementTimer();
@@ -167,5 +184,11 @@ function showDifficultySelection() {
         }
     });
 }
+
+daily.addEventListener("click", (e) => {
+    random = false;
+    e.target.blur(); // Removes focus from the button after clicking it
+    showDifficultySelection();
+})
 
 showDifficultySelection();
