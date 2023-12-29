@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "open-props": "^1.6.5",
-    "parcel": "^2.9.3",
+    "parcel": "^2.10.0",
     "sweetalert2": "^11.7.21"
   }
 }
