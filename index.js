@@ -66,19 +66,18 @@ async function isValid() {
 }
 
 function getUserInput(e) {
-    if (!(done || isLoading)) {
-        if (e.key === "Backspace") {
-            currentLetters.pop();
-            letters[currentLetters.length + currentRow * ANSWER_LENGTH].innerText = "";
+    if (done || isLoading) return;
+    if (e.key === "Backspace") {
+        currentLetters.pop();
+        letters[currentLetters.length + currentRow * ANSWER_LENGTH].innerText = "";
+    }
+    if (currentLetters.length !== ANSWER_LENGTH) {
+        if (isLetter(e.key)) {
+            currentLetters.push(e.key.toLowerCase());
+            letters[currentLetters.length - 1 + currentRow * ANSWER_LENGTH].innerText = e.key;
         }
-        if (currentLetters.length !== ANSWER_LENGTH) {
-            if (isLetter(e.key)) {
-                currentLetters.push(e.key.toLowerCase());
-                letters[currentLetters.length - 1 + currentRow * ANSWER_LENGTH].innerText = e.key;
-            }
-        } else if (e.key === "Enter") {
-            validateInput();
-        }
+    } else if (e.key === "Enter") {
+        validateInput();
     }
 }
 
@@ -119,9 +118,8 @@ function colourLetters() {
         }
     }
     for (let i = 0; i < ANSWER_LENGTH; i++) {
-        if (expectedAnswer[i] === currentLetters[i]) {
-            // pass
-        } else if (expectedAnswer.includes(currentLetters[i]) && map[currentLetters[i]] > 0) {
+        if (expectedAnswer[i] === currentLetters[i]) continue;
+        if (expectedAnswer.includes(currentLetters[i]) && map[currentLetters[i]] > 0) {
             letters[i + currentRow * ANSWER_LENGTH].classList.add("wrong-place");
             map[expectedAnswer[i]]--;
         } else {
@@ -143,9 +141,7 @@ async function init(difficulty, random) {
     // Initializing variables to be able to replay the game (using daily challenge)
     for (let i = 0; i < ROUNDS * ANSWER_LENGTH; i++) {
         letters[i].innerText = "";
-        letters[i].classList.remove("wrong");
-        letters[i].classList.remove("wrong-place");
-        letters[i].classList.remove("right-place");
+        letters[i].classList.remove("wrong", "wrong-place", "right-place");
     }
     currentLetters = [];
     currentRow = 0;

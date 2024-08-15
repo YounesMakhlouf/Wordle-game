@@ -1,7 +1,7 @@
 {
   "dependencies": {
-    "open-props": "^1.6.5",
+    "open-props": "^1.7.5",
     "parcel": "^2.12.0",
-    "sweetalert2": "^11.7.21"
+    "sweetalert2": "^11.12.4"
   }
 }
